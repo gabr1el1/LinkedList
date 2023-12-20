@@ -102,21 +102,18 @@ class LinkedList {
     index(parameter) then we return the node
 
     */
-    if (index > this._size - 1) {
-      return undefined;
-    } else {
-      let current = this._head;
-      for (let i = 0; i < index + 1; i++) {
-        if (i == index) {
-          return current;
-        }
-        current = current.next;
+    let current = this._head;
+    for (let i = 0; i < index + 1; i++) {
+      if (i == index) {
+        return current;
       }
+      current = current.next;
     }
   }
 
   pop() {
     if (this._head !== null) {
+      this._size -= 1;
       if (this._size == 1) {
         this._head = null;
       } else {
@@ -127,7 +124,56 @@ class LinkedList {
           current = current.next;
         }
         beforeCurrent.next = null;
+        this._tail = beforeCurrent;
       }
+    }
+  }
+
+  contains(value) {
+    if (this._head !== null) {
+      let current = this._head;
+      for (let i = 0; i < this._size; i++) {
+        if (current.value == value) {
+          return true;
+        }
+        if (current.next == null) {
+          return false;
+        }
+        current = current.next;
+      }
+    }
+    return false;
+  }
+
+  find(value) {
+    if (this._head !== null) {
+      let current = this._head;
+      for (let i = 0; i < this._size; i++) {
+        if (current.value == value) {
+          return i;
+        }
+        if (current.next == null) {
+          return null;
+        }
+        current = current.next;
+      }
+    }
+    return null;
+  }
+
+  toString() {
+    if (this._head !== null) {
+      let current = this._head;
+      let listString = "";
+      for (let i = 0; i < this._size; i++) {
+        if (i == this._size - 1) {
+          listString += `(${current.value})`;
+        } else {
+          listString += `(${current.value}) -> `;
+        }
+        current = current.next;
+      }
+      return listString;
     }
   }
 }
@@ -145,10 +191,14 @@ class Node {
 let list1 = new LinkedList();
 list1.append(7);
 list1.append(14);
+list1.append(21);
+list1.append(28);
 list1.prepend(77);
 console.log(`The size of the list is ${list1.size}`);
 console.log(`The head of the list is ${list1.head.value}`);
 console.log(`The tail of the list is ${list1.tail.value}`);
-console.log(`The node at index 1 is ${list1.at(2).value}`);
-list1.pop();
-console.log(list1._head.next.next);
+console.log(`The node at index 2 is ${list1.at(2).value}`);
+console.log(`The list contains 7? ${list1.contains(7)}`);
+console.log(`The list contains 99? ${list1.contains(99)}`);
+console.log(`The value 28 is at index ${list1.find(28)}`);
+console.log(`The list is ${list1.toString()}`);
