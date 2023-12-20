@@ -25,7 +25,7 @@ class LinkedList {
     and update the tail
 
     */
-    this._size += 1;
+
     let newNode = new Node(value);
     if (this._head == null) {
       this._head = newNode;
@@ -37,7 +37,24 @@ class LinkedList {
       }
       currentNode.next = newNode;
       this._tail = currentNode.next;
+
+      /*
+      Things to notice: 
+      In JavaScript, When you assign an object to a variable 
+      or pass it as an argument to a function, you're working 
+      with a reference to the object. 
+
+      This means that when you assign an object to a variable, 
+      you're not copying the entire object; instead, 
+      you're creating a reference to the same object in memory. 
+
+      For example here, let's say head is already assigned
+      an object of type Node(). When currentNode = this._head
+      when we do currentNode.next we are affecting the original 
+      property next of this._head.
+      */
     }
+    this._size += 1;
   }
 
   prepend(value) {
@@ -52,7 +69,6 @@ class LinkedList {
     and then this._head.next will be oldHead
     */
 
-    this._size += 1;
     let newHead = new Node(value);
 
     if (this._head == null) {
@@ -63,6 +79,8 @@ class LinkedList {
       this._head = newHead;
       this._head.next = oldHead;
     }
+
+    this._size += 1;
   }
 
   get size() {
@@ -76,15 +94,39 @@ class LinkedList {
   }
 
   at(index) {
-    if (index > this._size) {
+    /*
+    When index is less than 0 or more than 
+    maximum index we return undefined 
+    else we do a for loop to traverse the list
+    with next until its index(i) is equal to 
+    index(parameter) then we return the node
+
+    */
+    if (index > this._size - 1) {
       return undefined;
     } else {
       let current = this._head;
-      for (let i = 0; index < array.length + 1; index++) {
+      for (let i = 0; i < index + 1; i++) {
         if (i == index) {
           return current;
         }
         current = current.next;
+      }
+    }
+  }
+
+  pop() {
+    if (this._head !== null) {
+      if (this._size == 1) {
+        this._head = null;
+      } else {
+        let current = this._head,
+          beforeCurrent;
+        while (current.next !== null) {
+          beforeCurrent = current;
+          current = current.next;
+        }
+        beforeCurrent.next = null;
       }
     }
   }
@@ -107,4 +149,6 @@ list1.prepend(77);
 console.log(`The size of the list is ${list1.size}`);
 console.log(`The head of the list is ${list1.head.value}`);
 console.log(`The tail of the list is ${list1.tail.value}`);
-console.log(`The node at index 2 is ${list1.at(2)}`);
+console.log(`The node at index 1 is ${list1.at(2).value}`);
+list1.pop();
+console.log(list1._head.next.next);
