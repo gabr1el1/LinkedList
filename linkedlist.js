@@ -5,9 +5,9 @@ class LinkedList {
     tail and head are the 
     same
     */
-    this.head = null;
-    this.tail = null;
-    this.size = 0;
+    this._head = null;
+    this._tail = null;
+    this._size = 0;
   }
   append(value) {
     /*
@@ -25,18 +25,18 @@ class LinkedList {
     and update the tail
 
     */
-    this.size + 1;
+    this._size += 1;
     let newNode = new Node(value);
-    if (this.head == null) {
-      this.head = newNode;
-      this.tail = newNode;
+    if (this._head == null) {
+      this._head = newNode;
+      this._tail = newNode;
     } else {
-      let currentNode = this.head;
+      let currentNode = this._head;
       while (currentNode.next !== null) {
         currentNode = currentNode.next;
       }
       currentNode.next = newNode;
-      this.tail = currentNode.next;
+      this._tail = currentNode.next;
     }
   }
 
@@ -47,26 +47,46 @@ class LinkedList {
     if the head is null just 
     assign it the new Node
 
-    otherwise store the oldHead (this.head)
-    update this.head with the newHead
-    and then this.head.next will be oldHead
+    otherwise store the oldHead (this._head)
+    update this._head with the newHead
+    and then this._head.next will be oldHead
     */
 
-    this.size + 1;
+    this._size += 1;
     let newHead = new Node(value);
 
-    if (this.head == null) {
-      this.head = newNode;
-      this.tail = newNode;
+    if (this._head == null) {
+      this._head = newNode;
+      this._tail = newNode;
     } else {
-      let oldHead = this.head;
-      this.head = newHead;
-      this.head.next = oldHead;
+      let oldHead = this._head;
+      this._head = newHead;
+      this._head.next = oldHead;
     }
   }
 
-  size() {
-    return this.size;
+  get size() {
+    return this._size;
+  }
+  get head() {
+    return this._head;
+  }
+  get tail() {
+    return this._tail;
+  }
+
+  at(index) {
+    if (index > this._size) {
+      return undefined;
+    } else {
+      let current = this._head;
+      for (let i = 0; index < array.length + 1; index++) {
+        if (i == index) {
+          return current;
+        }
+        current = current.next;
+      }
+    }
   }
 }
 
@@ -84,4 +104,7 @@ let list1 = new LinkedList();
 list1.append(7);
 list1.append(14);
 list1.prepend(77);
-list1.size();
+console.log(`The size of the list is ${list1.size}`);
+console.log(`The head of the list is ${list1.head.value}`);
+console.log(`The tail of the list is ${list1.tail.value}`);
+console.log(`The node at index 2 is ${list1.at(2)}`);
