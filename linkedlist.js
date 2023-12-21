@@ -11,18 +11,11 @@ class LinkedList {
   }
   append(value) {
     /*
-    First increment the size of the list then 
+    If head is not null
 
-    it the head is null just create a new Node 
-    and assign it to head the tail will be the same
-
-    otherwise start to traverse the list 
-    by the head, as long as the next node 
-    is not null keep advancing
-
-    once we reach the end of the list 
-    we assign the new Node to this last one
-    and update the tail
+    this._tail.next will be the new Node
+    and now the this._tail is this new node 
+    of this._tail.next
 
     */
 
@@ -31,12 +24,8 @@ class LinkedList {
       this._head = newNode;
       this._tail = newNode;
     } else {
-      let currentNode = this._head;
-      while (currentNode.next !== null) {
-        currentNode = currentNode.next;
-      }
-      currentNode.next = newNode;
-      this._tail = currentNode.next;
+      this._tail.next = new Node(value);
+      this._tail = this._tail.next;
 
       /*
       Things to notice: 
@@ -100,20 +89,22 @@ class LinkedList {
     else we do a for loop to traverse the list
     with next until its index(i) is equal to 
     index(parameter) then we return the node
-
     */
-    let current = this._head;
-    for (let i = 0; i < index + 1; i++) {
-      if (i == index) {
-        return current;
+    if (index > this._size - 1 || index < 0) {
+      return undefined;
+    } else {
+      let current = this._head;
+      for (let i = 0; i < index + 1; i++) {
+        if (i == index) {
+          return current;
+        }
+        current = current.next;
       }
-      current = current.next;
     }
   }
 
   pop() {
     if (this._head !== null) {
-      this._size -= 1;
       if (this._size == 1) {
         this._head = null;
       } else {
@@ -126,6 +117,7 @@ class LinkedList {
         beforeCurrent.next = null;
         this._tail = beforeCurrent;
       }
+      this._size -= 1;
     }
   }
 
@@ -176,6 +168,71 @@ class LinkedList {
       return listString;
     }
   }
+
+  insertAt(value, index) {
+    if (index < 0) {
+      return undefined;
+    } else {
+      let newNode = new Node(value);
+      if (index == 0) {
+        if (this._head == null) {
+          this._head = newNode;
+          this._tail = this._head;
+        } else {
+          let oldHead = this._head;
+          this._head = newNode;
+          this._head.next = oldHead;
+        }
+      } else if (index >= this._size - 1) {
+        this._tail.next = newNode;
+        this._tail = this._tail.next;
+      } else if (index < this._size - 1) {
+        let current = this._head.next;
+        let beforeCurrent = this._head;
+
+        for (let i = 1; i < index + 1; i++) {
+          if (i == index) {
+            beforeCurrent.next = newNode;
+            beforeCurrent.next.next = current;
+          }
+          beforeCurrent = current;
+          current = current.next;
+        }
+      }
+    }
+    this._size += 1;
+  }
+
+  removeAt(index) {
+    if (this._head !== null) {
+      if (index < 0 || index > this._size - 1) {
+        return undefined;
+      } else {
+        if (index == 0) {
+          if (this._size == 1) {
+            this._head = null;
+            this._tail = this._head;
+          } else {
+            this._head = this._head.next;
+          }
+        } else {
+          let current = this._head.next;
+          let beforeCurrent;
+          for (let i = 1; i < index + 1; i++) {
+            if (i == index && index !== this._size - 1) {
+              beforeCurrent.next = current.next;
+            } else if (i == index && index == this._size - 1) {
+              beforeCurrent.next = current.next;
+              this._tail = beforeCurrent;
+            }
+            beforeCurrent = current;
+            current = current.next;
+          }
+        }
+      }
+      this._size -= 1;
+    }
+  }
 }
 
 class Node {
@@ -194,11 +251,15 @@ list1.append(14);
 list1.append(21);
 list1.append(28);
 list1.prepend(77);
-console.log(`The size of the list is ${list1.size}`);
-console.log(`The head of the list is ${list1.head.value}`);
-console.log(`The tail of the list is ${list1.tail.value}`);
-console.log(`The node at index 2 is ${list1.at(2).value}`);
-console.log(`The list contains 7? ${list1.contains(7)}`);
-console.log(`The list contains 99? ${list1.contains(99)}`);
-console.log(`The value 28 is at index ${list1.find(28)}`);
+list1.insertAt(44, 3);
+list1.insertAt(55, 0);
+list1.insertAt(66, 1);
+list1.insertAt(88, 1000);
 console.log(`The list is ${list1.toString()}`);
+list1.removeAt(7);
+console.log(`The tail of the list is ${list1._tail.value}`);
+console.log(`The list is ${list1.toString()}`);
+console.log(`The tail of the list is ${list1._tail.value}`);
+list1.removeAt(7);
+console.log(`The list is ${list1.toString()}`);
+console.log(`The tail of the list is ${list1._tail.value}`);
